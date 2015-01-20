@@ -179,9 +179,9 @@ $wp_list_table = new WO_Table();
 							  	</p>
 							  	<table>
 							  		<tr>
-							  			<th style="text-align:right;">Server Build: </th>
+							  			<th style="text-align:right;">Plugin Build: </th>
 							  			<td>
-<?php echo _WO()->version;?>
+<?php echo strpos(_WO()->version, '-') ? _WO()->version . " <span style='color:orange;'>You are using a development version of the plugin.</span>" : _WO()->version;?>
 							  			</td>
 							  		</tr>
 							  		<tr>
