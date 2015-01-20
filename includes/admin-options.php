@@ -54,7 +54,7 @@ class WPOAuth_Admin {
 		?>
 <div class="wrap">
 	        	<h2>Server Confirguration</h2>
-	        	<p>Check out the <a href="http://wp-oauth.com/documentation/">documentation</a>.</p>
+	        	<p>Check out the <a href="http://wp-oauth.com/documentation/">Documentation</a>.</p>
 
 	        	<form method="post" action="options.php">
 <?php settings_fields('wo_options');?>

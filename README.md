@@ -2,6 +2,11 @@
 
 Current Version: 3.0.3-alpha
 
+Version Milestone:
+* Simple nag about reviewing the plugin. This will NOT interfere
+* Tie in a tab filter system to allow for additional tabs to be added using the API
+* Finish the client management layout and workflow.
+
 This project is an OAuth 2.0 compatible authentication method for WordPress. The goal of WP OAuth Server 
 (WordPress Open Authentication) is to provide an easy to use authentication method that 3rd party services can use to securely connect to any server running WordPress site.
 
