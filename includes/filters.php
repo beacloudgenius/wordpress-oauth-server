@@ -20,8 +20,8 @@ function wo_api_error_setup ( $errors )
 /**
  * Default Method Filter for the resource server API calls
  */
-add_filter('wo_endpoints', 'wo_default_endpoints');
-function wo_default_methods ()
+add_filter('wo_endpoints', 'wo_default_endpoints', 1);
+function wo_default_endpoints ()
 {
   $endpoints = array(
     'me' => array('func' =>'_wo_method_me')
@@ -35,6 +35,14 @@ function wo_default_methods ()
  */
 function _wo_method_me ( $token=null )
 {
+  /** added 3.0.2 to handle access tokens not asigned to user */
+  if(!isset($token['user_id']) || $token['user_id'] == 0)
+  {
+    $response = new OAuth2\Response();
+    $response->setError(400, 'invalid_request', 'Missinng or invalid access token');
+    $response->send();
+    exit;
+  }
   $user_id = &$token['user_id'];
 
   global $wpdb;
@@ -43,7 +51,8 @@ function _wo_method_me ( $token=null )
   /** prevent sensative data - makes me happy ;) */
   unset($me_data['user_pass']);
   unset($me_data['user_activation_key']);
-  
-  print json_encode( $me_data );
+  unset($me_data['user_url']);
+  $response = new OAuth2\Response($me_data);
+  $response->send();
   exit;
 }
