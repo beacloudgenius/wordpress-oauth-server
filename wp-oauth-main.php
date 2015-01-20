@@ -1,6 +1,6 @@
 <?php
 class WO_Server {
-	public static $version = "3.0.3a";
+	public $version = "3.0.3-alpha";
 	public static $_instance = null;
 	protected $defualt_settings = array(
 		"enabled" => 1,
