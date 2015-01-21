@@ -69,12 +69,43 @@ function client_ip(){
 }
 
 /**
- * Simple Validation of License
- * License Key: md5(admin_email)
- * @return boolean [description]
+ * @param  [type] $l [description]
+ * @return [type]    [description]
  */
 function _vl($l) {
-	return md5(get_option('admin_email')) == $l;
+	return md5(basename(__FILE__)) == $l;
+}
+
+function edit_client_form($client_id)
+{
+	global $wpdb;
+	$client = $wpdb->get_row("
+		SELECT * FROM {$wpdb->prefix}oauth_clients 
+		WHERE client_id='{$client_id}'", 
+		ARRAY_A);
+
+	return '<div class="wo-popup-inner">
+						<h3 class="header">Update '.$client['name'].'</h3>
+						<form onsubmit="wo_update_client(this); return false;" action="/" method="post">
+							<label>Client Name *</label>
+							<input type="text" name="client_name" placeholder="Client Name" value="'.$client['name'].'"/>
+
+							<label>Redirct URI *</label>
+							<input type="text" name="redirect_uri" placeholder="Redirect URI" value="'.$client['redirect_uri'].'"/>
+
+							<label>Client Description</label>
+							<textarea name="client_description">'.$client['description'].'</textarea>
+
+							<!--<label></label>
+							<input type="text" name="redirect_uri" value="Client ID: '.$client['client_id'].'" disabled="disbaled"/>
+							<label></label>
+							<input type="text" name="redirect_uri" value="Client Sccret: '.$client['client_secret'].'" disabled="disbaled"/>
+							-->
+
+							<input type="hidden" name="client_id" value="'.$client_id.'" />
+							<input type="submit" class="button button-primary" value="Update Client" />
+						</form>
+					</div>';
 }
 
 /**

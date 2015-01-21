@@ -169,13 +169,12 @@ class WPOAuth_Admin {
 			              </tr>
 									</table>
 
-									<?php if(_vl($options['license'])): ?>
-									<h3>Firewall <hr></h3>
+									<h3>Firewall <?php echo !_vl($options['license'])? ' <i style="color:red;font-size:14px;">Pro version required</i>':'';?><hr></h3>
 									<p>
-										The server firewall is intented to help secure the access to your OAuth server. If you are 
-										using the OAuth Server for private affairs, there is no need to expose it to the plublic.
-										The firewall allows you to manage who/what/where can access the oauth server. 
+										The firewall is used to secure your OAuth API by allowing you to block all IP's and only allow
+										approved IP's through. The firewall supports whitelisting of IPV4 and IPv6 addresses.
 									</p>
+									<?php if(_vl($options['license'])): ?>
 									<table class="form-table">
 			              <tr valign="top">
 			               	<th scope="row">Block All Incomming Requests but Whitelisted: </th>
@@ -259,7 +258,7 @@ class WPOAuth_Admin {
 	        <!-- ADD NEW CLIENT HIDDEN FROM -->
 	        <div id="add-new-client" style="display:none;">
 						<div class="wo-popup-inner">
-							<h3 class="header">Add a New Client</h3>
+						<h3 class="header">Add a New Client</h3>
 							<form id="create-new-client" action="/" method="get">
 								<label>Client Name *</label>
 								<input type="text" name="client_name" placeholder="Client Name"/>
@@ -270,8 +269,8 @@ class WPOAuth_Admin {
 								<label>Client Description</label>
 								<textarea name="client_description"></textarea>
 
-<?php submit_button("Add Client");?>
-</form>
+								<?php submit_button("Add Client");?>
+							</form>
 						</div>
 
 					</div>
