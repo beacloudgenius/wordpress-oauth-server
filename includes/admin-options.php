@@ -57,8 +57,7 @@ class WPOAuth_Admin {
 	        	<p>Check out the <a href="http://wp-oauth.com/documentation/">Documentation</a>.</p>
 
 	        	<form method="post" action="options.php">
-<?php settings_fields('wo_options');?>
-
+							<?php settings_fields('wo_options');?>
 	          	<div id="wo_tabs">
 								<ul>
 							  	<li><a href="#general-settings">General Settings</a></li>
@@ -200,7 +199,7 @@ class WPOAuth_Admin {
 							  <div id="clients">
 							  	<h2>
 							  		Clients
-							  		<a href="#TB_inline?width=600&height=550&inlineId=add-new-client" class="add-new-h2 thickbox" title="Add New Client">Add New Client</a>
+							  		<a href="<?php echo WOURI ; ?>/library/content/create-new-client.php?TB_iframe=true&width=600&height=420" class="add-new-h2 thickbox" title="Add New Client">Add New Client</a>
 							  	</h2>
 
 									<?php
@@ -254,26 +253,6 @@ class WPOAuth_Admin {
 	                <input type="submit" class="button-primary" value="<?php _e('Save Changes')?>" />
 	            </p>
 	        </form>
-
-	        <!-- ADD NEW CLIENT HIDDEN FROM -->
-	        <div id="add-new-client" style="display:none;">
-						<div class="wo-popup-inner">
-						<h3 class="header">Add a New Client</h3>
-							<form id="create-new-client" action="/" method="get">
-								<label>Client Name *</label>
-								<input type="text" name="client_name" placeholder="Client Name"/>
-
-								<label>Redirct URI *</label>
-								<input type="text" name="redirect_uri" placeholder="Redirect URI"/>
-
-								<label>Client Description</label>
-								<textarea name="client_description"></textarea>
-
-								<?php submit_button("Add Client");?>
-							</form>
-						</div>
-
-					</div>
 
 	    </div>
 <?php
