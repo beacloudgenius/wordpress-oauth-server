@@ -18,7 +18,6 @@ require_once( $parse_uri[0] . 'wp-load.php' );
 if(!current_user_can('manage_options'))
 	exit('Unauthorized Access');
 
-
 /** listen for post back */
 if(isset($_POST['_wpnonce']) && wp_verify_nonce( $_POST['_wpnonce'], 'add-new-client')){
 	$new_client_id = wo_gen_key();
@@ -36,6 +35,8 @@ if(isset($_POST['_wpnonce']) && wp_verify_nonce( $_POST['_wpnonce'], 'add-new-cl
 	print 'Reloading...<script>window.parent.location.reload();</script>';
 	exit;
 }
+
+$options = get_option('wo_options');
 ?>
 <style>
 body {
@@ -144,7 +145,11 @@ form {}
     		<td><asd/td>
     		<td class="controls">
     			<?php wp_nonce_field( 'add-new-client' ); ?>
-    			<input type="submit" value="Add Client" />
+    			<?php if (!_vl($options['license']) && has_a_client()):?>
+    				<span style="margin-top: 20px; color:red; margin-right: 80px; display: block">Limitation Reach. Max 1 Client. <a href="http://wp-oauth.com/pro-license" target="_top">Upgrade to Pro</a></span>
+    			<?php else: ?>
+    				<input type="submit" value="Add Client" />
+    			<?php endif; ?>
     		</td>
     	</tr>
     </table>

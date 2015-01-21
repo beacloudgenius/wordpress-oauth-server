@@ -44,6 +44,18 @@ function wo_crypt($input, $rounds = 7) {
 	return crypt($input, sprintf('$2a$%02d$', $rounds) . $salt);
 }
 
+/** 
+ * Check if there is more than one client in the system
+ * @return boolean [description]
+ */
+function has_a_client (){
+	global $wpdb;
+	$count = $wpdb->get_results("SELECT * FROM {$wpdb->prefix}oauth_clients");
+	//print_r($count);
+	if (count($count) >= 1)
+		return true;
+}
+
 /**
  * Get the client IP multiple ways since REMOTE_ADDR is not always the best way to do so
  * @return [type] [description]
