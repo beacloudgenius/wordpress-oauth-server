@@ -70,11 +70,23 @@ class WPOAuth_Admin {
 								<!-- GENERAL SETTINGS -->
 								<div id="general-settings">
 							  	<table class="form-table">
+							  		<tr valign="top">
+			            		<th scope="row">License Key:</th>
+			                <td>
+			                 	<input type="text" name="<?php echo $this->option_name?>[license]" value="<?php echo $options["license"];?>" length="40" style="width:300px;"/>
+			                 	<?php echo $options["license"] != '' && !_vl($options["license"]) ? 'Invalid License': ''; ?>
+			                  <?php if (false == _vl($options["license"])): ?>
+			                  	<p class="description">Get the pro license by visiting <a href="#">http://wp-oauth.com/pro-license</a>.</p>
+			                	<?php else: ?>
+			                		<p class="description" style="color:green;">Congratulations and Thank You. Your license is <strong>valid</strong>.</p>
+			                	<?php endif; ?>
+			                </td>
+			              </tr>
 			            	<tr valign="top">
 			            		<th scope="row">API Enabled:</th>
 			                	<td>
 			                  	<input type="checkbox" name="<?php echo $this->option_name?>[enabled]" value="1" <?php echo $options["enabled"] == "1" ? "checked='checked'" : "";?> />
-			                  	<p class="description">When disabled, API will present a "Server is Temporarily Unavailable" message.</p>
+			                  	<p class="description">If the API is not enabled, it will present requests with an "Unavailable" message.</p>
 			                	</td>
 			              	</tr>
 			            </table>
@@ -156,6 +168,33 @@ class WPOAuth_Admin {
 			              	  </td>
 			              </tr>
 									</table>
+
+									<?php if(_vl($options['license'])): ?>
+									<h3>Firewall <hr></h3>
+									<p>
+										The server firewall is intented to help secure the access to your OAuth server. If you are 
+										using the OAuth Server for private affairs, there is no need to expose it to the plublic.
+										The firewall allows you to manage who/what/where can access the oauth server. 
+									</p>
+									<table class="form-table">
+			              <tr valign="top">
+			               	<th scope="row">Block All Incomming Requests but Whitelisted: </th>
+			                  <td>
+			                  	<input type="checkbox" name="<?php echo $this->option_name?>[firewall_block_all_incomming]" value="1" <?php echo $options["firewall_block_all_incomming"] == "1" ? "checked='checked'" : "";?>/>
+			                  	<p class="description">Block all incomming requests that are not whitelisted below. </p>
+			              	  </td>
+			              </tr>
+
+			              <tr valign="top">
+			               	<th scope="row">IP Whitelist: </th>
+			                  <td>
+			                  	<textarea name="<?php echo $this->option_name?>[firewall_ip_whitelist]" style="margin: 0px;width: 340px;height: 140px;resize: none;" placeholder="127.0.0.1, ::1"><?php echo $options["firewall_ip_whitelist"]; ?></textarea>
+			                  	<p class="description">Enter IP addresses seperated by commas. IPV4 and IPV6 are supported.</p>
+			              	  </td>
+			              </tr>
+									</table>
+								<?php endif; ?>
+
 							  </div>
 
 							  <!-- CLIENTS -->
@@ -165,34 +204,47 @@ class WPOAuth_Admin {
 							  		<a href="#TB_inline?width=600&height=550&inlineId=add-new-client" class="add-new-h2 thickbox" title="Add New Client">Add New Client</a>
 							  	</h2>
 
-<?php
-$wp_list_table = new WO_Table();
-		$wp_list_table->prepare_items();
-		$wp_list_table->display();
-		?>
-</div>
+									<?php
+									$wp_list_table = new WO_Table();
+									$wp_list_table->prepare_items();
+									$wp_list_table->display();
+									?>
+								</div>
 
+								<!-- SERVER STATUS CONTENT -->
 							  <div id="server-status">
 							  	<h2>Server Status</h2>
 							  	<p>
-							  		The following information is a guide.
+							  		The following information is helpful when debugging or reporting an issue. Please note that the
+							  		informaiton provided here is a reference only.
 							  	</p>
 							  	<table>
 							  		<tr>
 							  			<th style="text-align:right;">Plugin Build: </th>
 							  			<td>
-<?php echo strpos(_WO()->version, '-') ? _WO()->version . " <span style='color:orange;'>You are using a development version of the plugin.</span>" : _WO()->version;?>
+												<?php echo strpos(_WO()->version, '-') ? _WO()->version . " <span style='color:orange;'>You are using a development version of the plugin.</span>" : _WO()->version;?>
 							  			</td>
 							  		</tr>
+
 							  		<tr>
 							  			<th style="text-align:right;">PHP Version (<?php echo PHP_VERSION;?>): </th>
 							  			<td>
-<?php echo version_compare(PHP_VERSION, '5.3.9') >= 0 ? " <span style='color:green;'>OK</span>" : " <span style='color:red;'>Warning</span>";?>
+												<?php echo version_compare(PHP_VERSION, '5.3.9') >= 0 ? " <span style='color:green;'>OK</span>" : " <span style='color:red;'>Warning</span>";?>
 							  			</td>
 							  		</tr>
+
 							  		<tr>
 							  			<th style="text-align:right;">Running CGI: </th>
-							  			<td><?php echo substr(php_sapi_name(), 0, 3) != 'cgi' ? " <span style='color:green;'>OK</span>" : " <span style='color:orange;'>Notice</span> Header 'Authorization Basic' may not work as expected.";?></td>
+							  			<td>
+							  				<?php echo substr(php_sapi_name(), 0, 3) != 'cgi' ? " <span style='color:green;'>OK</span>" : " <span style='color:orange;'>Notice</span> Header 'Authorization Basic' may not work as expected.";?>
+							  			</td>
+							  		</tr>
+
+							  		<tr>
+							  			<th style="text-align:right;">License: </th>
+							  			<td>
+												<?php echo !_vl($options['license']) ? " <span style='color:orange;'>Standard" : "<span style='color:green;'>Pro Version</span>"?>
+											</td>
 							  		</tr>
 							  	</table>
 							  </div>
@@ -245,6 +297,10 @@ $wp_list_table = new WO_Table();
 
 		$input["require_exact_redirect_uri"] = isset($input["require_exact_redirect_uri"]) ? $input["require_exact_redirect_uri"] : 0;
 		$input["enforce_state"] = isset($input["enforce_state"]) ? $input["enforce_state"] : 0;
+
+		// Only run with valid license
+		$input["blacklist_ip_range_enabled"] = isset($input["blacklist_ip_range_enabled"]) ? $input["blacklist_ip_range_enabled"] : 0;
+		$input["block_all_incomming"] = isset($input["block_all_incomming"]) ? $input["block_all_incomming"] : 0;
 
 		return $input;
 	}
